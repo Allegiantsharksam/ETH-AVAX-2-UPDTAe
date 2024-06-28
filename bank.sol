@@ -1,18 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract bank{
-int bal=0;
+contract Bank {
+    int256 private bal;
 
-function deposite_money(int amt) public{
-  bal+=amt;
- }
+    event Deposit(address indexed account, int256 amount);
+    event Withdrawal(address indexed account, int256 amount);
 
- function withdraw(int amt) public{
-  bal-=amt;
+    constructor() {
+        bal = 0;
+    }
+
+    function depositMoney(int256 amt) public {
+        bal += amt;
+        emit Deposit(msg.sender, amt);
+    }
+
+    function withdraw(int256 amt) public {
+        require(bal >= amt, "Insufficient balance");
+        bal -= amt;
+        emit Withdrawal(msg.sender, amt);
+    }
+
+    function getBalance() public view returns (int256) {
+        return bal;
+    }
 }
-
-  function getBalance() public view returns(int){
-  return bal;
-  }
-  }
